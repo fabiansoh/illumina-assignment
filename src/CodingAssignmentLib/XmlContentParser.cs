@@ -9,8 +9,7 @@ public class XmlContentParser : IContentParser
     public IEnumerable<Data> Parse(string content)
     {
         // using LINQ to parse XML
-        var doc = XDocument.Parse(content);
-        var root = doc.Root;
+        var root = XDocument.Parse(content).Root;
         
         if (root == null)
             return Enumerable.Empty<Data>();

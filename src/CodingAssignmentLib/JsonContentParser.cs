@@ -8,8 +8,7 @@ public class JsonContentParser : IContentParser
     public IEnumerable<Data> Parse(string content)
     {
         // deserialise content string into JsonDocument
-        using var document = JsonDocument.Parse(content);
-        var root = document.RootElement;
+        var root = JsonDocument.Parse(content).RootElement;
         
         // assuming that we are always getting a json array in json files
         // need to cater for json object if required
