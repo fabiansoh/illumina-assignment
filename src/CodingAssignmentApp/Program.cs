@@ -60,5 +60,50 @@ void Display()
 
 void Search()
 {
-    Console.WriteLine("Enter the key to search.");
+    Console.WriteLine("Enter the key to search:");
+    var searchTerm = Console.ReadLine()?.ToLower() ?? string.Empty;
+    
+    if (string.IsNullOrWhiteSpace(searchTerm))
+    {
+        Console.WriteLine("Search term cannot be empty.");
+        return;
+    }
+
+    var fileUtility = new FileUtility(new FileSystem());
+    var parserFactory = new ContentParserFactory();
+    var dataDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
+    
+    try
+    {
+        var allFiles = Directory.GetFiles(dataDirectory, "*.*", SearchOption.AllDirectories)
+            .Where(f => f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ||
+                       f.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ||
+                       f.EndsWith(".xml", StringComparison.OrdinalIgnoreCase));
+
+        var foundAny = false;
+        foreach (var file in allFiles)
+        {
+            var extension = fileUtility.GetExtension(file);
+            var parser = parserFactory.CreateParser(extension);
+            var dataList = parser.Parse(fileUtility.GetContent(file));
+
+            foreach (var data in dataList)
+            {
+                if (data.Key.ToLower().StartsWith(searchTerm))
+                {
+                    foundAny = true;
+                    Console.WriteLine($"Key:{data.Key} Value:{data.Value} FileName:{file}");
+                }
+            }
+        }
+
+        if (!foundAny)
+        {
+            Console.WriteLine("No matching records found.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error: {ex.Message}");
+    }
 }
