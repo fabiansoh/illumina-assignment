@@ -12,6 +12,10 @@ public class ContentParserFactory
         {
             return new CsvContentParser();
         }
+        else if (extension == ".json")
+        {
+            return new JsonContentParser();
+        }
         else if (extension == ".xml")
         {
             return new XmlContentParser();
