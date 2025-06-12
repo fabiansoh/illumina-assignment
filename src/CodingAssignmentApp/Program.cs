@@ -89,7 +89,7 @@ void Search()
 
             foreach (var data in dataList)
             {
-                if (data.Key.ToLower().StartsWith(searchTerm))
+                if (data.Key.ToLower().Contains(searchTerm))
                 {
                     foundAny = true;
                     Console.WriteLine($"Key:{data.Key} Value:{data.Value} FileName:{file}");
