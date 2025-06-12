@@ -25,7 +25,8 @@ do
         case "3":
             return;
         default:
-            return;
+            Console.WriteLine("Invalid selection");
+            break;
     }
 } while (true);
 
