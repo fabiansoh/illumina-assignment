@@ -29,25 +29,32 @@ do
     }
 } while (true);
 
-
 void Display()
 {
     Console.WriteLine("Enter the name of the file to display its content:");
 
     var fileName = Console.ReadLine()!;
     var fileUtility = new FileUtility(new FileSystem());
-    var dataList = Enumerable.Empty<Data>();
-
-    if (fileUtility.GetExtension(fileName) == ".csv")
+    var parserFactory = new ContentParserFactory();
+    
+    try
     {
-        dataList = new CsvContentParser().Parse(fileUtility.GetContent(fileName));
+        var extension = fileUtility.GetExtension(fileName);
+        // return appropriate parser based on file extension
+        var parser = parserFactory.CreateParser(extension);
+        // polymorphism - parse the file content using the appropriate parser
+        var dataList = parser.Parse(fileUtility.GetContent(fileName));
+
+        Console.WriteLine("Data:");
+        foreach (var data in dataList)
+        {
+            Console.WriteLine($"Key:{data.Key} Value:{data.Value}");
+        }
     }
-
-    Console.WriteLine("Data:");
-
-    foreach (var data in dataList)
+    // broad exception handling for now
+    catch (Exception ex)
     {
-        Console.WriteLine($"Key:{data.Key} Value:{data.Value}");
+        Console.WriteLine($"Error: {ex.Message}");
     }
 }
 
